@@ -1,9 +1,12 @@
-const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 const asyncHandle = require("../middlewares/asyncHandle");
 const ErrorResponse = require("../utils/ErrorResponse");
 const { User } = require("../models/index");
-const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
+const httpStatus = require("http-status");
+const { tokenService } = require("../services/index");
+const { authService } = require("../services/index");
+const { tokenTypes } = require("../config/tokens");
 
 module.exports = {
   signup: asyncHandle(async (req, res, next) => {
@@ -17,57 +20,54 @@ module.exports = {
       money: req.body.money,
       role: req.body.role,
     });
+    const tokens = await tokenService.generateAuthTokens(user);
 
-    res.status(201).json({
+    res.status(httpStatus.CREATED).json({
       message: "signup successful",
+      user,
+      tokens,
     });
   }),
   login: asyncHandle(async (req, res, next) => {
     const { email, password } = req.body;
-    console.log(req.body);
     if (!email || !password) {
-      return next(new ErrorResponse("Provide your email and password", 400));
+      return next(
+        new ErrorResponse(
+          "Provide your email and password",
+          httpStatus.BAD_REQUEST
+        )
+      );
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await authService.loginUserWithEmailAndPassword(
+      email,
+      password
+    );
 
-    if (!user) {
-      return next(new ErrorResponse("Incorrect Password or email", 401));
-    }
-    const isMatch = await user.isMatchPassword(password);
-    if (!isMatch) {
-      return next(new ErrorResponse("Incorrect Password", 400));
-    }
-
-    const token = user.signToken();
-    res.cookie("tokens", token, {
-      exprises: new Date(
-        Date.now() + process.env.TOKEN_COOKIE_EXPRISE_IN * 24 * 60 * 60 * 1000
-      ),
-      httpOnly: true,
-    });
-    res.status(200).json({
+    const tokens = await tokenService.generateAuthTokens(user);
+    res.status(httpStatus.OK).json({
       status: "success",
-      token,
+      user,
+      tokens,
     });
   }),
   protect: asyncHandle(async (req, res, next) => {
     let token;
-    if (res.headers.authorization?.startsWith("Bearer")) {
-      token = res.headers.authorization.split(" ")[1];
+    if (req.headers.authorization?.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1];
     }
 
     if (!token) {
-      return next(new ErrorResponse("Please login to access", 401));
+      return next(
+        new ErrorResponse("Please login to access", httpStatus.UNAUTHORIZED)
+      );
     }
 
-    const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
-    console.log(decoded);
-
-    const user = await User.findById(decoded.id);
+    const decoded = await tokenService.verifyToken(token, tokenTypes.REFRESH);
+    const user = await User.findById(decoded.user);
 
     if (!user) {
-      return next(new ErrorResponse("Invalid token", 401));
+      return next(new ErrorResponse("Invalid token", httpStatus.UNAUTHORIZED));
     }
 
     req.user = user;
@@ -76,20 +76,15 @@ module.exports = {
   forgotPassword: asyncHandle(async (req, res, next) => {
     const { email } = req.body;
     if (!email) {
-      return next(new ErrorResponse("Provide your email", 401));
+      return next(
+        new ErrorResponse("Provide your email", httpStatus.UNAUTHORIZED)
+      );
     }
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return next(new ErrorResponse("User do not exist", 401));
-    }
-    const resetToken = await user.getResetPasswordToken();
-
-    await user.save({ validateBeforeSave: false });
+    const resetToken = await tokenService.generateResetPasswordToken(email);
 
     const resetURL = `${req.protocol}://${req.get(
       "host"
-    )}/api/auth/reset-password/${resetToken}`;
+    )}/api/auth/reset-password?token=${resetToken}`;
 
     const message = `Please click on ${resetURL} to update password, Link exists in ${process.env.RESET_TOKEN_EXPIRE}`;
 
@@ -107,26 +102,9 @@ module.exports = {
     });
   }),
   resetPassword: asyncHandle(async (req, res, next) => {
-    const resetPasswordToken = crypto
-      .createHash("sha256", process.env.RESET_TOKEN_SECRET)
-      .update(req.params.resetToken)
-      .digest("hex");
+    await authService.resetPassword(req.query.token, req.body.password);
 
-    const user = await User.findOne({
-      resetPasswordToken,
-      resetPasswordExprise: { $gt: Date.now() },
-    });
-
-    if (!user) {
-      return next(new ErrorResponse("Token is invalid or has exprised", 400));
-    }
-
-    user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExprise = undefined;
-    await user.save();
-
-    res.status(200).json({
+    res.status(httpStatus.OK).json({
       message: "Reset password success",
     });
   }),

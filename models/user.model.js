@@ -48,10 +48,14 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.methods.isMatchPassword = async function (password) {
-  const ismatchPassword = await bcrypt.compare(password, this.password);
+userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!user;
+};
 
-  return ismatchPassword;
+userSchema.methods.isMatchPassword = async function (password) {
+  const user = this;
+  return bcrypt.compare(password, user.password);
 };
 userSchema.methods.signToken = function () {
   return jwt.sign({ id: this._id }, process.env.TOKEN_SECRET, {
