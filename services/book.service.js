@@ -28,13 +28,13 @@ const updateBookById = async(bookId, updateBody) => {
         runValidators: true,
     });
     if (!book) {
-        throw new ErrorResponse(" Book not found", httpStatus.NOT_FOUND);
+        throw new ErrorResponse("Book not found", httpStatus.NOT_FOUND);
     }
     return book;
 };
 
 const deleteBookById = async(bookId) => {
-    const book = await book.getBookById(bookId);
+    const book = await Book.findById(bookId);
     if (!book) {
         throw new ErrorResponse("Book not found", httpStatus.NOT_FOUND);
     }

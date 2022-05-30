@@ -5,45 +5,49 @@ const { statusBookUserService } = require("../services");
 
 module.exports = {
     createStatus: asyncHandle(async(req, res, next) => {
-        const status = await statusBookUserService.createBook(req.body);
+        const status = await statusBookUserService.createStatusBookUser(req.body);
         res.status(httpStatus.CREATED).send(status);
     }),
 
     getStatuses: asyncHandle(async(req, res, next) => {
-        const books = await bookService.getBooks(req.query);
+        const statuses = await statusBookUserService.getStatusBookUsers(req.query);
         res.status(httpStatus.OK).json({
             status: "success",
-            result: books.length,
+            result: statuses.length,
             data: {
-                books: books,
+                statusBookUser: statuses,
             },
         });
     }),
 
     getStatus: asyncHandle(async(req, res, next) => {
-        const book = await bookService.getBookById(req.params.bookId);
-        if (!book) {
-            return next(new ErrorResponse(httpStatus.NOT_FOUND, "Book not found"));
+        const status = await statusBookUserService.getStatusBookUserById(
+            req.params.statusId
+        );
+        if (!status) {
+            return next(
+                new ErrorResponse(httpStatus.NOT_FOUND, "Status Book User not found")
+            );
         }
         res.status(httpStatus.OK).json({
             status: "success",
-            book,
+            statusBookUser: status,
         });
     }),
 
     updateStatus: asyncHandle(async(req, res) => {
-        const boStatusok = await bookService.updateBookById(
-            req.params.Id,
+        const status = await statusBookUserService.updateStatusBookUserById(
+            req.params.statusId,
             req.body
         );
         res.status(httpStatus.OK).json({
             status: "success",
-            book,
+            statusBookUser: status,
         });
     }),
 
     deleteStatus: asyncHandle(async(req, res) => {
-        await bookService.deleteBookById(req.params.BookId);
+        await statusBookUserService.deleteStatusBookUserId(req.params.statusId);
         res.status(httpStatus.NO_CONTENT).json({
             status: "success",
             data: null,

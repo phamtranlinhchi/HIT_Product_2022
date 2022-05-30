@@ -32,7 +32,7 @@ module.exports = {
     }),
 
     updateBook: asyncHandle(async(req, res) => {
-        const book = await bookService.updateBookById(req.params.Id, req.body);
+        const book = await bookService.updateBookById(req.params.bookId, req.body);
         res.status(httpStatus.OK).json({
             status: "success",
             book,
@@ -40,7 +40,7 @@ module.exports = {
     }),
 
     deleteBook: asyncHandle(async(req, res) => {
-        await bookService.deleteBookById(req.params.BookId);
+        await bookService.deleteBookById(req.params.bookId);
         res.status(httpStatus.NO_CONTENT).json({
             status: "success",
             data: null,
