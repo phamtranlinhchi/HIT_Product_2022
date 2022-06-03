@@ -10,7 +10,7 @@ router
   .post(commentBookController.createCommentBook);
 
 router
-  .route(":commentBookId")
+  .route("/:commentBookId")
   .get(commentBookController.createCommentBook)
   .put(commentBookController.updateCommentBook)
   .delete(commentBookController.deletecommentBook);
