@@ -6,6 +6,7 @@ const sendEmail = require("../utils/sendEmail");
 const httpStatus = require("http-status");
 const { tokenService } = require("../services/index");
 const { authService } = require("../services/index");
+const { emailService } = require("../services/index");
 const { tokenTypes } = require("../config/tokens");
 
 module.exports = {
@@ -30,15 +31,6 @@ module.exports = {
   }),
   login: asyncHandle(async (req, res, next) => {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return next(
-        new ErrorResponse(
-          "Provide your email and password",
-          httpStatus.BAD_REQUEST
-        )
-      );
-    }
-
     const user = await authService.loginUserWithEmailAndPassword(
       email,
       password
@@ -50,6 +42,10 @@ module.exports = {
       user,
       tokens,
     });
+  }),
+  logout: asyncHandle(async (req, res) => {
+    await authService.logout(req.body.refreshToken);
+    res.status(httpStatus.NO_CONTENT).json();
   }),
   protect: asyncHandle(async (req, res, next) => {
     let token;
@@ -63,8 +59,10 @@ module.exports = {
       );
     }
 
-    const decoded = await tokenService.verifyToken(token, tokenTypes.REFRESH);
-    const user = await User.findById(decoded.user);
+    // const decoded = await tokenService.verifyToken(token, tokenTypes.REFRESH);
+    // const user = await User.findById(decoded.user);
+    const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
+    const user = await User.findById(decoded.sub);
 
     if (!user) {
       return next(new ErrorResponse("Invalid token", httpStatus.UNAUTHORIZED));
@@ -72,6 +70,10 @@ module.exports = {
 
     req.user = user;
     next();
+  }),
+  refreshTokens: asyncHandle(async (req, res, next) => {
+    const tokens = await authService.refreshAuth(req.body.refreshToken);
+    res.status(httpStatus.OK).json({ ...tokens });
   }),
   forgotPassword: asyncHandle(async (req, res, next) => {
     const { email } = req.body;
@@ -81,24 +83,13 @@ module.exports = {
       );
     }
     const resetToken = await tokenService.generateResetPasswordToken(email);
-
     const resetURL = `${req.protocol}://${req.get(
       "host"
     )}/api/auth/reset-password?token=${resetToken}`;
+    await emailService.sendResetPasswordEmail(email, resetURL);
 
-    const message = `Please click on ${resetURL} to update password, Link exists in ${process.env.RESET_TOKEN_EXPIRE}`;
-
-    const options = {
-      email,
-      subject: "Forgot Password?",
-      message,
-    };
-
-    await sendEmail(options);
-
-    res.status(200).json({
+    res.status(httpStatus.OK).json({
       message: "Password reset link sent to your email",
-      resetURL,
     });
   }),
   resetPassword: asyncHandle(async (req, res, next) => {

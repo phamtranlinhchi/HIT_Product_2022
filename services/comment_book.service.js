@@ -38,7 +38,7 @@ const updateCommentBookById = async (CommentBookId, updateBody) => {
 };
 
 const deleteCommentBookById = async (commentBookId) => {
-  const commentBook = await CommentBook.getcommentBookById(commentBookId);
+  const commentBook = await getcommentBookById(commentBookId);
   if (!commentBook) {
     throw new ErrorResponse("CommentBook not found", httpStatus.NOT_FOUND);
   }

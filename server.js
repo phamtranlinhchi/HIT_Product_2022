@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(indexRouter);
 app.use(errorHandle);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
 

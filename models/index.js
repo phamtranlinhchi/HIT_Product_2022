@@ -5,7 +5,7 @@ module.exports = {
   commentPost: require("./comment_post.model"),
   Post: require("./post.model"),
   statusBookUser: require("./status_book_user.model"),
-  transactionBook: require("./transaction_book.model"),
+  TransactionBook: require("./transaction_book.model"),
   Video: require("./video.model"),
   Token: require("./token.model"),
 };
