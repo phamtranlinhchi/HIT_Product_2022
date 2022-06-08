@@ -9,4 +9,3 @@ module.exports = {
     Video: require("./video.model"),
     Token: require("./token.model"),
 };
-
