@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const commentBookSchema = new Schema({
-  book: {
-    type: Schema.Types.ObjectId, //
-    ref: "books",
-    required: [true, "Must contain book id"],
-  },
+  // book: {
+  //   type: Schema.Types.ObjectId, //
+  //   ref: "books",
+  //   required: [true, "Must contain book id"],
+  // },
   users: [
     {
       type: Schema.Types.ObjectId,
@@ -20,10 +20,10 @@ const commentBookSchema = new Schema({
     mingLength: [1, "Must at lest 1 characters"],
     required: [true, "Must contain comment book "],
   },
-  commentBookDate: {
-    type: Date, //
-    required: [true, "Must contain comment book date"],
-  },
+  // commentBookDate: {
+  //   type: Date, //
+  //   required: [true, "Must contain comment book date"],
+  // },
 });
 
 //Asign commentBookDate = Date() presave
@@ -34,13 +34,13 @@ commentBookSchema.pre("save", function (next) {
 });
 
 // Populate username of user document pre find
-commentBookSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: "users",
-    select: "username",
-  });
-  next();
-});
+// commentBookSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: "users",
+//     select: "username",
+//   });
+//   next();
+// });
 
 /**
  * @typedef commentBkModel

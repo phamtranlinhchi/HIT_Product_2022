@@ -4,17 +4,22 @@ const asyncHandle = require("../middlewares/asyncHandle");
 const { commentBookService } = require("../services");
 
 module.exports = {
+  getcommentBook_index: asyncHandle(async (req, res, next) => {
+    const user = req.user;
+    res.status(httpStatus.OK).render("index", {
+      user,
+    });
+  }),
+
   createCommentBook: asyncHandle(async (req, res, next) => {
+    console.log(req.body);
     const commentBook = await commentBookService.createCommentBook(req.body);
     res.status(httpStatus.CREATED).send(commentBook);
   }),
 
   getcommentBooks: asyncHandle(async (req, res, next) => {
     const result = await commentBookService.getCommentBooks(req.query);
-    res.status(httpStatus.OK).json({
-      status: "success",
-      result,
-    });
+    res.send(result);
   }),
 
   getcommentBook: asyncHandle(async (req, res, next) => {
@@ -34,7 +39,7 @@ module.exports = {
 
   updateCommentBook: asyncHandle(async (req, res) => {
     const commentBook = await commentBookService.updateCommentBookById(
-      req.params.commentId,
+      req.params.commentBookId,
       req.body
     );
     res.status(httpStatus.OK).json({
