@@ -4,6 +4,7 @@ const router = express.Router();
 const { commentBookController } = require("../controllers/index");
 const { authController } = require("../controllers/index");
 
+router.route("/fetch").get(commentBookController.getcommentBook_index);
 router
   .route("/")
   .get(commentBookController.getcommentBooks)
