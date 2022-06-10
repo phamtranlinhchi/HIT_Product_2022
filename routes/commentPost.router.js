@@ -4,10 +4,7 @@ const router = express.Router();
 const { commentPostController } = require("../controllers/index");
 const { authController } = require("../controllers/index");
 
-router
-    .route("/")
-    .get(commentPostController.getcommentPosts)
-    .post(commentPostController.createCommentPost);
+router.route("/").get(commentPostController.getcommentPosts).post(commentPostController.createCommentPost);
 
 router
     .route("/:commentPostId")
