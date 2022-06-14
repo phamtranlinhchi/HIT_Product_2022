@@ -11,7 +11,6 @@ const sendEmail = async (options) => {
       pass: process.env.EMAIL_PASSWORD,
     },
   });
-  console.log(process.env.EMAIL_USER);
   let info = await transporter.sendMail({
     from: "<thuydoan11202@gmail.com>",
     to: options.email,

@@ -4,10 +4,11 @@ const asyncHandle = require("../middlewares/asyncHandle");
 const { userService } = require("../services");
 const { User } = require("../models");
 
-const createUser = asyncHandle(async(req, res, next) => {
-    const user = await userService.createUser(req.body);
-    res.status(httpStatus.CREATED).send(user);
-});
+const createUser = asyncHandle(async (req, res, next) => {
+  const user = await userService.createUser(req.body);
+  res.status(httpStatus.CREATED).json({
+    user,
+  });
 
 const getUsers = asyncHandle(async(req, res, next) => {
     const result = await userService.getUsers(req.query);
