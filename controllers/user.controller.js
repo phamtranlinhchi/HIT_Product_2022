@@ -5,12 +5,13 @@ const { userService } = require("../services");
 const { User } = require("../models");
 
 const createUser = asyncHandle(async (req, res, next) => {
-  const user = await userService.createUser(req.body);
-  res.status(httpStatus.CREATED).json({
-    user,
-  });
+    const user = await userService.createUser(req.body);
+    res.status(httpStatus.CREATED).json({
+        user,
+    });
+});
 
-const getUsers = asyncHandle(async(req, res, next) => {
+const getUsers = asyncHandle(async (req, res, next) => {
     const result = await userService.getUsers(req.query);
     res.status(httpStatus.OK).json({
         status: "success",
@@ -18,7 +19,7 @@ const getUsers = asyncHandle(async(req, res, next) => {
     });
 });
 
-const getUser = asyncHandle(async(req, res, next) => {
+const getUser = asyncHandle(async (req, res, next) => {
     const user = await userService.getUserById(req.params.userId);
     if (!user) {
         return next(new ErrorResponse(httpStatus.NOT_FOUND, "User not found"));
@@ -29,7 +30,7 @@ const getUser = asyncHandle(async(req, res, next) => {
     });
 });
 
-const updateUser = asyncHandle(async(req, res, next) => {
+const updateUser = asyncHandle(async (req, res, next) => {
     const user = await userService.updateUserById(req.params.userId, req.body);
     res.status(httpStatus.OK).json({
         status: "success",
@@ -37,15 +38,16 @@ const updateUser = asyncHandle(async(req, res, next) => {
     });
 });
 
-const deleteUser = asyncHandle(async(req, res, next) => {
+const deleteUser = asyncHandle(async (req, res, next) => {
     await userService.deleteUserById(req.params.userId);
     res.status(httpStatus.NO_CONTENT).json({
         status: "success",
     });
 });
 
-const getUserTopByStar = asyncHandle(async(req, res, next) => {
-    const top = await User.aggregate([{
+const getUserTopByStar = asyncHandle(async (req, res, next) => {
+    const top = await User.aggregate([
+        {
             $sort: { star: -1 },
         },
         {
