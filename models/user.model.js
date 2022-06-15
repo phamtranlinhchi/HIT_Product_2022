@@ -6,74 +6,73 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const userSchema = new Schema(
-  {
-    email: {
-      type: String,
-      required: [true, "User must have email"],
-      validate: [validator.isEmail, "Invalid email"],
-      unique: true,
+    {
+        email: {
+            type: String,
+            required: [true, "User must have email"],
+            validate: [validator.isEmail, "Invalid email"],
+        },
+        username: {
+            type: String,
+            required: [true, "User must have username"],
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: [true, "User must have password"],
+            select: false,
+        },
+        completeBook: String,
+        star: Number,
+        statusUser: Boolean,
+        money: Number,
+        role: {
+            type: String,
+            enum: ["admin", "user"],
+            default: "user",
+        },
+        resetPasswordToken: String,
+        resetPasswordExprise: Date,
     },
-    username: {
-      type: String,
-      required: [true, "User must have username"],
+    {
+        timestamps: true,
     },
-    password: {
-      type: String,
-      required: [true, "User must have password"],
-      select: false,
-    },
-    completeBook: String,
-    star: Number,
-    statusUser: Boolean,
-    money: Number,
-    role: {
-      type: String,
-      enum: ["admin", "user"],
-      default: "user",
-    },
-    resetPasswordToken: String,
-    resetPasswordExprise: Date,
-  },
-  {
-    timestamps: true,
-  }
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+    if (!this.isModified("password")) return next();
 
-  const salt = bcrypt.genSaltSync(10);
-  this.password = await bcrypt.hash(this.password, salt);
+    const salt = bcrypt.genSaltSync(10);
+    this.password = await bcrypt.hash(this.password, salt);
 
-  next();
+    next();
 });
 
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
-  return !!user;
+    const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+    return !!user;
 };
 
 userSchema.methods.isMatchPassword = async function (password) {
-  const user = this;
-  return bcrypt.compare(password, user.password);
+    const user = this;
+    return bcrypt.compare(password, user.password);
 };
 userSchema.methods.signToken = function () {
-  return jwt.sign({ id: this._id }, process.env.TOKEN_SECRET, {
-    expiresIn: process.env.TOKEN_EXPRISE,
-  });
+    return jwt.sign({ id: this._id }, process.env.TOKEN_SECRET, {
+        expiresIn: process.env.TOKEN_EXPRISE,
+    });
 };
 userSchema.methods.getResetPasswordToken = function () {
-  const resetToken = crypto.randomBytes(15).toString("hex");
+    const resetToken = crypto.randomBytes(15).toString("hex");
 
-  this.resetPasswordToken = crypto
-    .createHash("sha256", process.env.RESET_TOKEN_SECRET)
-    .update(resetToken)
-    .digest("hex");
+    this.resetPasswordToken = crypto
+        .createHash("sha256", process.env.RESET_TOKEN_SECRET)
+        .update(resetToken)
+        .digest("hex");
 
-  this.resetPasswordExprise =
-    Date.now() + process.env.RESET_TOKEN_EXPIRE * 60 * 1000;
+    this.resetPasswordExprise = Date.now() + process.env.RESET_TOKEN_EXPIRE * 60 * 1000;
 
-  return resetToken;
+    return resetToken;
 };
 
 module.exports = mongoose.model("users", userSchema);
