@@ -12,4 +12,3 @@ module.exports = (io) => {
         });
     });
 };
-//localhost:5000/api/users
