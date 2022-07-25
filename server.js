@@ -15,12 +15,12 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 dotenv.config({
-  path: "./config/dev.env",
+    path: "./config/dev.env",
 });
 const port = process.env.PORT || 3000;
 
 if (process.env.NODE_ENV === "development") {
-  app.use(logger("dev"));
+    app.use(logger("dev"));
 }
 
 require("./config/database")();
@@ -35,12 +35,12 @@ socket(io);
 app.use(errorHandle);
 
 server.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Example app listening on port ${port}`);
 });
 
 process.on("unhandledRejection", (err) => {
-  console.log(`Error: ${err.message}`);
-  server.close(() => {
-    process.exit(1);
-  });
+    console.log(`Error: ${err.message}`);
+    server.close(() => {
+        process.exit(1);
+    });
 });

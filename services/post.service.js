@@ -3,26 +3,22 @@ const { Post } = require("../models");
 const ErrorResponse = require("../utils/ErrorResponse");
 const APIFeatures = require("../utils/apiFeatures");
 
-const createPost = async(postBody) => {
+const createPost = async (postBody) => {
     return Post.create(postBody);
 };
 
-const getPosts = async(postQuery) => {
-    const features = new APIFeatures(Post.find(), postQuery)
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
+const getPosts = async (postQuery) => {
+    const features = new APIFeatures(Post.find(), postQuery).filter().sort().limitFields().paginate();
 
     const posts = await features.query;
     return posts;
 };
 
-const getPostById = async(id) => {
+const getPostById = async (id) => {
     return Post.findById(id);
 };
 
-const updatePostById = async(postId, updateBody) => {
+const updatePostById = async (postId, updateBody) => {
     const post = await Post.findByIdAndUpdate(postId, updateBody, {
         new: true,
         runValidators: true,
@@ -33,7 +29,7 @@ const updatePostById = async(postId, updateBody) => {
     return post;
 };
 
-const deletePostById = async(postId) => {
+const deletePostById = async (postId) => {
     const post = await Post.findById(postId);
     if (!post) {
         throw new ErrorResponse("Post not found", httpStatus.NOT_FOUND);

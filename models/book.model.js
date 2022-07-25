@@ -13,7 +13,11 @@ const bookSchema = mongoose.Schema({
     },
     video: {
         type: String,
+<<<<<<< HEAD
         required: [true, "Must contain video"],
+=======
+        required: [true, "Must contain video "],
+>>>>>>> 528799b (features/socket_comments)
     },
     description: {
         type: String,

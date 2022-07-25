@@ -6,10 +6,6 @@ const { authController } = require("../controllers/index");
 
 router.route("/").get(bookController.getBooks).post(bookController.createBook);
 
-router
-    .route("/:bookId")
-    .get(bookController.getBook)
-    .put(bookController.updateBook)
-    .delete(bookController.deleteBook);
+router.route("/:bookId").get(bookController.getBook).put(bookController.updateBook).delete(bookController.deleteBook);
 
 module.exports = router;
