@@ -6,10 +6,6 @@ const { authController } = require("../controllers/index");
 
 router.route("/").get(postController.getPosts).post(postController.createPost);
 
-router
-    .route("/:postId")
-    .get(postController.getPost)
-    .put(postController.updatePost)
-    .delete(postController.deletePost);
+router.route("/:postId").get(postController.getPost).put(postController.updatePost).delete(postController.deletePost);
 
 module.exports = router;

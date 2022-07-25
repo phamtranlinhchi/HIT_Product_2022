@@ -2,11 +2,13 @@ const mongoose = require("mongoose"); //
 const { Schema } = mongoose; //
 
 const commentPostSchema = new Schema({
-    users: [{
-        type: Schema.Types.ObjectId,
-        ref: "users",
-        required: [true, "Must containt user id"],
-    }, ],
+    users: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "users",
+            required: [true, "Must containt user id"],
+        },
+    ],
     post: {
         type: Schema.Types.ObjectId,
         ref: "posts",
@@ -24,14 +26,14 @@ const commentPostSchema = new Schema({
 });
 
 //Assign commentPostDate = Date() pre save
-commentPostSchema.pre("save", function(next) {
+commentPostSchema.pre("save", function (next) {
     const now = new Date(); //
     this.commentPostDate = now; //
     next();
 });
 
 //Populate username of user document pre find
-commentPostSchema.pre(/^find/, function(next) {
+commentPostSchema.pre(/^find/, function (next) {
     this.populate({
         path: "users",
         select: "username",

@@ -11,11 +11,18 @@ const userSchema = new Schema(
             type: String,
             required: [true, "User must have email"],
             validate: [validator.isEmail, "Invalid email"],
+<<<<<<< HEAD
+=======
+            unique: true,
+>>>>>>> 528799b (features/socket_comments)
         },
         username: {
             type: String,
             required: [true, "User must have username"],
+<<<<<<< HEAD
             unique: true,
+=======
+>>>>>>> 528799b (features/socket_comments)
         },
         password: {
             type: String,

@@ -11,6 +11,7 @@ router
     // .get(authController.protect, userController.getUsers)
     .get(userController.getUsers)
     .post(userController.createUser);
+<<<<<<< HEAD
 router
     .route("/:userId")
     .get(userController.getUser)
@@ -18,3 +19,8 @@ router
     .delete(userController.deleteUser);
 
 module.exports = router;
+=======
+
+router.route("/:userId").get(userController.getUser).put(userController.updateUser).delete(userController.deleteUser);
+module.exports = router;
+>>>>>>> 528799b (features/socket_comments)

@@ -4,12 +4,12 @@ const asyncHandle = require("../middlewares/asyncHandle");
 const { bookService } = require("../services");
 
 module.exports = {
-    createBook: asyncHandle(async(req, res, next) => {
+    createBook: asyncHandle(async (req, res, next) => {
         const book = await bookService.createBook(req.body);
         res.status(httpStatus.CREATED).send(book);
     }),
 
-    getBooks: asyncHandle(async(req, res, next) => {
+    getBooks: asyncHandle(async (req, res, next) => {
         const books = await bookService.getBooks(req.query);
         res.status(httpStatus.OK).json({
             status: "success",
@@ -20,7 +20,7 @@ module.exports = {
         });
     }),
 
-    getBook: asyncHandle(async(req, res, next) => {
+    getBook: asyncHandle(async (req, res, next) => {
         const book = await bookService.getBookById(req.params.bookId);
         if (!book) {
             return next(new ErrorResponse(httpStatus.NOT_FOUND, "Book not found"));
@@ -31,7 +31,7 @@ module.exports = {
         });
     }),
 
-    updateBook: asyncHandle(async(req, res) => {
+    updateBook: asyncHandle(async (req, res) => {
         const book = await bookService.updateBookById(req.params.bookId, req.body);
         res.status(httpStatus.OK).json({
             status: "success",
@@ -39,7 +39,7 @@ module.exports = {
         });
     }),
 
-    deleteBook: asyncHandle(async(req, res) => {
+    deleteBook: asyncHandle(async (req, res) => {
         await bookService.deleteBookById(req.params.bookId);
         res.status(httpStatus.NO_CONTENT).json({
             status: "success",

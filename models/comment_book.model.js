@@ -7,12 +7,22 @@ const commentBookSchema = new Schema({
         ref: "books",
         required: [true, "Must contain book id"],
     },
-    user: {
+    // users: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "users",
+    //     required: [true, "Must contain user id "],
+    // },
+
+    // book: {
+    //   type: Schema.Types.ObjectId, //
+    //   ref: "books",
+    //   required: [true, "Must contain book id"],
+    // },
+    users: [{
         type: Schema.Types.ObjectId,
         ref: "users",
         required: [true, "Must contain user id "],
-    },
-
+    }, ],
     commentBookContent: {
         type: String, //
         trim: true,
@@ -20,19 +30,23 @@ const commentBookSchema = new Schema({
         required: [true, "Must contain comment book "],
     },
     commentBookDate: {
-        type: Date,
+        type: Date, //
     },
+    parentId: {
+        type: String, //
+        default: null,
+    }
 });
 
 //Asign commentBookDate = Date() presave
-commentBookSchema.pre("save", function (next) {
+commentBookSchema.pre("save", function(next) {
     const now = new Date(); //
     this.commentBookDate = now; //
     next();
 });
 
 // Populate username of user document pre find
-commentBookSchema.pre(/^find/, function (next) {
+commentBookSchema.pre(/^find/, function(next) {
     this.populate({
         path: "user",
         select: "username",

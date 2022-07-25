@@ -43,6 +43,7 @@ const deleteUser = asyncHandle(async (req, res, next) => {
     res.status(httpStatus.NO_CONTENT).json({
         status: "success",
     });
+<<<<<<< HEAD
 });
 
 const getUserTopByStar = asyncHandle(async (req, res, next) => {
@@ -61,6 +62,8 @@ const getUserTopByStar = asyncHandle(async (req, res, next) => {
             top,
         },
     });
+=======
+>>>>>>> 528799b (features/socket_comments)
 });
 
 module.exports = {
@@ -69,5 +72,8 @@ module.exports = {
     getUser,
     updateUser,
     deleteUser,
+<<<<<<< HEAD
     getUserTopByStar,
+=======
+>>>>>>> 528799b (features/socket_comments)
 };
