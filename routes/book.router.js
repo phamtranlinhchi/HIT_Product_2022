@@ -9,7 +9,7 @@ router.route("/").get(bookController.getBooks).post(bookController.createBook);
 router
     .route("/:bookId")
     .get(bookController.getBook)
-    .put(bookController.updateBook)
+    .patch(bookController.uploadBookImages, bookController.resizeBookImages, bookController.updateBook)
     .delete(bookController.deleteBook);
 
 module.exports = router;
