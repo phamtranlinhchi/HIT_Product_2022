@@ -38,7 +38,7 @@ module.exports = {
     createCommentBook: asyncHandle(async(req, res, next) => {
         if (!req.body.users) req.body.users = req.users;
         if (!req.body.book) req.body.book = req.query.book;
-        console.log(req.body)
+        // console.log(req.body)
         const commentBook = await commentBookService.createCommentBook(req.body);
         const getUser = await User.findOne(req.body.userId);
         const userName = { username: getUser.username }
