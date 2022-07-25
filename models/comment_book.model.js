@@ -7,22 +7,22 @@ const commentBookSchema = new Schema({
         ref: "books",
         required: [true, "Must contain book id"],
     },
-    // users: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: "users",
-    //     required: [true, "Must contain user id "],
-    // },
+    users: {
+        type: Schema.Types.ObjectId,
+        ref: "users",
+        required: [true, "Must contain user id "],
+    },
 
     // book: {
     //   type: Schema.Types.ObjectId, //
     //   ref: "books",
     //   required: [true, "Must contain book id"],
     // },
-    users: [{
-        type: Schema.Types.ObjectId,
-        ref: "users",
-        required: [true, "Must contain user id "],
-    }, ],
+    // users: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: "users",
+    //     required: [true, "Must contain user id "],
+    // }, ],
     commentBookContent: {
         type: String, //
         trim: true,
@@ -46,13 +46,13 @@ commentBookSchema.pre("save", function(next) {
 });
 
 // Populate username of user document pre find
-commentBookSchema.pre(/^find/, function(next) {
-    this.populate({
-        path: "user",
-        select: "username",
-    });
-    next();
-});
+// commentBookSchema.pre(/^find/, function(next) {
+//     this.populate({
+//         path: "users",
+//         select: "username",
+//     });
+//     next();
+// });
 
 /**
  * @typedef commentBkModel
