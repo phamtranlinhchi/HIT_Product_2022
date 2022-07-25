@@ -1,3 +1,54 @@
+// const Comment = require("./models/comment_book.model");
+// // const expressWs = require('express-ws');
+
+// module.exports = (io) => {
+//     io.on("connection", (socket) => {
+//         console.log(`New connection: ${socket.id}`);
+//         socket.on("comment", async(data) => {
+//             data.time = Date();
+//             socket.broadcast.emit("comment", data);
+//         });
+//         socket.on("typing", (data) => {
+//             socket.broadcast.emit("typing", data);
+//         });
+//     });
+// };
+// module.exports = (app) => {
+//     const wsInstance = expressWs(app);
+//     app.ws('/comment', (ws, req) => {
+//         ws.on('message', (message) => {
+//             console.log
+//             ws.broadcast(message)
+//         });
+//         ws.broadcast = function broadcast(data) {
+//             wsInstance.getWss().clients.forEach(function each(client) {
+//                 client.send(data);
+//             });
+//         }
+//     })
+
+// }
+// const Comment = require("./models/comment_book.model");
+
+// module.exports = (io) => {
+//     io.on("connection", (socket) => {
+//         console.log(`New connection: ${socket.id}`);
+//         socket.on("comment", async(data) => {
+//             data.time = Date();
+//             socket.broadcast.emit("comment", data);
+//         });
+//         socket.on("typing", (data) => {
+//             socket.broadcast.emit("typing", data);
+//         });
+//     });
+// }; });
+
+// process.on("unhandledRejection", (err) => {
+//     console.log(`Error: ${err.message}`);
+//     app.close(() => {
+//         process.exit(1);
+//     });
+// });
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -9,10 +60,16 @@ const errorHandle = require("./middlewares/errorHandle");
 const socket = require("./socket");
 
 const app = express();
+const cors = require("cors");
+app.use(cors({
+        origin: "http://localhost:3000",
+        method: ["GET", "POST"],
+    }))
+    // app.use(cors());
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server)
 
 dotenv.config({
     path: "./config/dev.env",

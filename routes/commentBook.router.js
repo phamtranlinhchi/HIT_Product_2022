@@ -12,7 +12,10 @@ router.route("/").get(commentBookController.getcommentBooks).post(commentBookCon
 
 router
     .route("/:commentBookId")
-    .get(commentBookController.createCommentBook)
+    .get(commentBookController.getcommentBook)
     .put(commentBookController.updateCommentBook)
     .delete(commentBookController.deletecommentBook);
+
+// router.route("").get(commentBookController.createCommentBook)
+// router.route('/add').post(commentBookController.createCommentBook)
 module.exports = router;
