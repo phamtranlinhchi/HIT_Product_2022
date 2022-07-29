@@ -11,10 +11,10 @@ const bookSchema = mongoose.Schema({
         trim: true,
         required: [true, "Must contain name book "],
     },
-    video: {
+    video: [{
         type: String,
         required: [true, "Must contain video "],
-    },
+    }],
     // video: {
     //     type: String,
     //     required: [true, "Must contain video "],
@@ -71,13 +71,13 @@ const bookSchema = mongoose.Schema({
 });
 
 //Function to sort book by view
-bookSchema.methods.sortByView = function() {
-    this.find({}, function(err, book) {
-        if (err) {} else {
-            return book;
-        }
-    }).sort({ view: -1 });
-};
+// bookSchema.methods.sortByView = function() {
+//     this.find({}, function(err, book) {
+//         if (err) {} else {
+//             return book;
+//         }
+//     }).sort({ view: -1 });
+// };
 /**
  * @typedef bookModel
  */

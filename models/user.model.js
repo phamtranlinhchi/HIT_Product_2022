@@ -20,7 +20,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, "User must have password"],
-        select: false,
+        // select: false,
     },
     completeBook: String,
     star: Number,
