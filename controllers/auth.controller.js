@@ -10,7 +10,7 @@ const { emailService } = require("../services/index");
 const { tokenTypes } = require("../config/tokens");
 
 module.exports = {
-    signup: asyncHandle(async (req, res, next) => {
+    signup: asyncHandle(async(req, res, next) => {
         const user = await User.create({
             email: req.body.email,
             password: req.body.password,
@@ -29,10 +29,10 @@ module.exports = {
             tokens,
         });
     }),
-    login: asyncHandle(async (req, res, next) => {
-        const { email, password } = req.body;
-        const user = await authService.loginUserWithEmailAndPassword(email, password);
-
+    login: asyncHandle(async(req, res, next) => {
+        const { username, password } = req.body;
+        // const user = await authService.loginUserWithEmailAndPassword(email, password);
+        const user = await authService.loginUserWithUserNameAndPassword(username, password);
         const tokens = await tokenService.generateAuthTokens(user);
         res.status(httpStatus.OK).json({
             status: "success",
@@ -40,13 +40,13 @@ module.exports = {
             tokens,
         });
     }),
-    logout: asyncHandle(async (req, res) => {
+    logout: asyncHandle(async(req, res) => {
         await authService.logout(req.body.refreshToken);
         res.status(httpStatus.NO_CONTENT).json();
     }),
-    protect: asyncHandle(async (req, res, next) => {
+    protect: asyncHandle(async(req, res, next) => {
         let token;
-        if (req.headers.authorization?.startsWith("Bearer")) {
+        if (req.headers.authorization.startsWith("Bearer")) {
             token = req.headers.authorization.split(" ")[1];
         }
 
@@ -66,11 +66,11 @@ module.exports = {
         req.user = user;
         next();
     }),
-    refreshTokens: asyncHandle(async (req, res, next) => {
+    refreshTokens: asyncHandle(async(req, res, next) => {
         const tokens = await authService.refreshAuth(req.body.refreshToken);
-        res.status(httpStatus.OK).json({ ...tokens });
+        res.status(httpStatus.OK).json({...tokens });
     }),
-    forgotPassword: asyncHandle(async (req, res, next) => {
+    forgotPassword: asyncHandle(async(req, res, next) => {
         const { email } = req.body;
         if (!email) {
             return next(new ErrorResponse("Provide your email", httpStatus.UNAUTHORIZED));
@@ -83,7 +83,7 @@ module.exports = {
             message: "Password reset link sent to your email",
         });
     }),
-    resetPassword: asyncHandle(async (req, res, next) => {
+    resetPassword: asyncHandle(async(req, res, next) => {
         await authService.resetPassword(req.query.token, req.body.password);
 
         res.status(httpStatus.OK).json({
