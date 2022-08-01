@@ -70,6 +70,9 @@ router
     .route('/tokenUser')
     .get(authController.getUserByToken)
 router
+    .route('/tokenUser')
+    .get(authController.getUserByToken)
+router
     .route("/:userId")
 
 .get(userController.getUser)

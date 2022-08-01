@@ -7,9 +7,28 @@ const logger = require("morgan");
 const indexRouter = require("./routes/index");
 const errorHandle = require("./middlewares/errorHandle");
 const socket = require("./socket");
-
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 const app = express();
 const cors = require("cors");
+
+
+const options = {
+    definition: {
+        openapi: "3.0.0",
+        infor: {
+            title: "Library API",
+            version: "1.0.0",
+            description: "API HIT BOOK"
+        },
+        servers: [{
+            url: "http://localhost:5000",
+        }],
+    },
+    apis: ['./routes/index.js'],
+}
+const specs = swaggerJsDoc(options);
+app.use('/api-doc', swaggerUI.serve, swaggerUI.setup(specs));
 app.use(cors({
         origin: "http://localhost:3000",
         method: ["GET", "POST"],

@@ -25,6 +25,8 @@
     "sharp": "^0.30.7",
     "slugify": "^1.6.5",
     "socket.io": "^4.5.1",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.5.0",
     "validator": "^13.7.0",
     "winston": "^3.7.2"
   },
