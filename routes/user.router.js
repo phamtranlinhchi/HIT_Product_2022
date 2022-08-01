@@ -12,6 +12,9 @@ router
     .get(userController.getUsers)
     .post(userController.createUser);
 router
+    .route('/tokenUser')
+    .get(authController.getUserByToken)
+router
     .route("/:userId")
     .get(userController.getUser)
     .put(userController.updateUser)

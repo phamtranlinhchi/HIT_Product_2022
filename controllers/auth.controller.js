@@ -90,4 +90,24 @@ module.exports = {
             message: "Reset password success",
         });
     }),
+    getUserByToken: asyncHandle(async(req, res, next) => {
+        let token;
+        if (req.headers.authorization.startsWith("Bearer")) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+        if (!token) {
+            return next(new ErrorResponse("Please login to access", httpStatus.UNAUTHORIZED));
+        }
+        // const decoded = await tokenService.verifyToken(token, tokenTypes.REFRESH);
+        // const user = await User.findById(decoded.user);
+        const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
+        const user = await User.findById(decoded.sub);
+
+        if (!user) {
+            return next(new ErrorResponse("Invalid token", httpStatus.UNAUTHORIZED));
+        }
+        res.status(200).json({
+            user: user
+        })
+    }),
 };
