@@ -15,19 +15,14 @@ const { tokenTypes } = require("../config/tokens");
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (
-  userId,
-  expires,
-  type,
-  secret = process.env.TOKEN_SECRET
-) => {
-  const payload = {
-    sub: userId,
-    type,
-  };
-  return jwt.sign(payload, secret, {
-    expiresIn: expires,
-  });
+const generateToken = (userId, expires, type, secret = process.env.TOKEN_SECRET) => {
+    const payload = {
+        sub: userId,
+        type,
+    };
+    return jwt.sign(payload, secret, {
+        expiresIn: expires,
+    });
 };
 
 /**
@@ -39,13 +34,13 @@ const generateToken = (
  * @returns {Promise<Token>}
  */
 const saveToken = async (token, userId, expires, type) => {
-  const tokenDoc = await Token.create({
-    token,
-    user: userId,
-    expires,
-    type,
-  });
-  return tokenDoc;
+    const tokenDoc = await Token.create({
+        token,
+        user: userId,
+        expires,
+        type,
+    });
+    return tokenDoc;
 };
 
 /**
@@ -55,16 +50,16 @@ const saveToken = async (token, userId, expires, type) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
-  const payload = jwt.verify(token, process.env.TOKEN_SECRET);
-  const tokenDoc = await Token.findOne({
-    token,
-    type,
-    user: payload.sub,
-  });
-  if (!tokenDoc) {
-    throw new Error("Token not found");
-  }
-  return tokenDoc;
+    const payload = jwt.verify(token, process.env.TOKEN_SECRET);
+    const tokenDoc = await Token.findOne({
+        token,
+        type,
+        user: payload.sub,
+    });
+    if (!tokenDoc) {
+        throw new Error("Token not found");
+    }
+    return tokenDoc;
 };
 
 /**
@@ -73,35 +68,22 @@ const verifyToken = async (token, type) => {
  * @returns {Promise<Object>}
  */
 const generateAuthTokens = async (user) => {
-  const accessTokenExpires = process.env.TOKEN_EXPRISE;
-  const accessToken = generateToken(
-    user.id,
-    accessTokenExpires,
-    tokenTypes.ACCESS
-  );
+    const accessTokenExpires = process.env.TOKEN_EXPRISE;
+    const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
 
-  const refreshTokenExpiresDoc = moment().add(1, "days");
-  const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPRISE;
-  const refreshToken = generateToken(
-    user.id,
-    refreshTokenExpires,
-    tokenTypes.REFRESH
-  );
-  await saveToken(
-    refreshToken,
-    user.id,
-    refreshTokenExpiresDoc,
-    tokenTypes.REFRESH
-  );
+    const refreshTokenExpiresDoc = moment().add(1, "days");
+    const refreshTokenExpires = process.env.REFRESH_TOKEN_EXPRISE;
+    const refreshToken = generateToken(user.id, refreshTokenExpires, tokenTypes.REFRESH);
+    await saveToken(refreshToken, user.id, refreshTokenExpiresDoc, tokenTypes.REFRESH);
 
-  return {
-    access: {
-      token: accessToken,
-    },
-    refresh: {
-      token: refreshToken,
-    },
-  };
+    return {
+        access: {
+            token: accessToken,
+        },
+        refresh: {
+            token: refreshToken,
+        },
+    };
 };
 
 /**
@@ -110,27 +92,15 @@ const generateAuthTokens = async (user) => {
  * @returns {Promise<string>}
  */
 const generateResetPasswordToken = async (email) => {
-  const user = await userService.getUserByEmail(email);
-  if (!user) {
-    throw new ErrorResponse(
-      httpStatus.NOT_FOUND,
-      "No users found with this email"
-    );
-  }
-  const expires = process.env.RESET_TOKEN_EXPIRE * 60 * 100;
-  const expiresDoc = moment().add(1, "minutes");
-  const resetPasswordToken = generateToken(
-    user.id,
-    expires,
-    tokenTypes.RESET_PASSWORD
-  );
-  await saveToken(
-    resetPasswordToken,
-    user.id,
-    expiresDoc,
-    tokenTypes.RESET_PASSWORD
-  );
-  return resetPasswordToken;
+    const user = await userService.getUserByEmail(email);
+    if (!user) {
+        throw new ErrorResponse(httpStatus.NOT_FOUND, "No users found with this email");
+    }
+    const expires = process.env.RESET_TOKEN_EXPIRE * 60 * 100;
+    const expiresDoc = moment().add(1, "minutes");
+    const resetPasswordToken = generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
+    await saveToken(resetPasswordToken, user.id, expiresDoc, tokenTypes.RESET_PASSWORD);
+    return resetPasswordToken;
 };
 
 /**
@@ -153,9 +123,9 @@ const generateResetPasswordToken = async (email) => {
 // };
 
 module.exports = {
-  generateToken,
-  generateAuthTokens,
-  saveToken,
-  verifyToken,
-  generateResetPasswordToken,
+    generateToken,
+    generateAuthTokens,
+    saveToken,
+    verifyToken,
+    generateResetPasswordToken,
 };

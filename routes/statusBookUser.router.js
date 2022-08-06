@@ -4,10 +4,7 @@ const router = express.Router();
 const { statusBookUserController } = require("../controllers/index");
 const { authController } = require("../controllers/index");
 
-router
-    .route("/")
-    .get(statusBookUserController.getStatuses)
-    .post(statusBookUserController.createStatus);
+router.route("/").get(statusBookUserController.getStatuses).post(statusBookUserController.createStatus);
 
 router
     .route("/:statusId")

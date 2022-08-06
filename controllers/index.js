@@ -7,6 +7,3 @@ module.exports = {
     statusBookUserController: require("./statusBookUser.controller"),
     postController: require("./post.controller"),
 };
-
-
-

@@ -9,46 +9,45 @@ const statusBookUserRouter = require("./statusBookUser.router");
 const postRouter = require("./post.router");
 const commentPostRouter = require("./commentPost.router");
 
-  
 const transactionRouter = require("./transaction.router");
 
 const defaultRoutes = [
-  {
-    path: "/api/auth",
-    route: authRouter,
-  },
-  {
-    path: "/api/users",
-    route: userRouter,
-  },
-  {
-    path: "/api/books",
-    route: bookRouter,
-  },
-  {
-    path: "/api/commentBooks",
-    route: commentBookRouter,
-  },
-  {
-    path: "/api/status-book-user",
-    route: statusBookUserRouter,
-  },
-  {
-      path: "/api/posts",
-      route: postRouter,
-  },
-  {
-      path: "/api/comment-posts",
-      route: commentPostRouter,
-  },
-  {
-    path: "/api/transactionBooks",
-    route: transactionRouter,
-  },
+    {
+        path: "/api/auth",
+        route: authRouter,
+    },
+    {
+        path: "/api/users",
+        route: userRouter,
+    },
+    {
+        path: "/api/books",
+        route: bookRouter,
+    },
+    {
+        path: "/api/commentBooks",
+        route: commentBookRouter,
+    },
+    {
+        path: "/api/status-book-user",
+        route: statusBookUserRouter,
+    },
+    {
+        path: "/api/posts",
+        route: postRouter,
+    },
+    {
+        path: "/api/comment-posts",
+        route: commentPostRouter,
+    },
+    {
+        path: "/api/transactionBooks",
+        route: transactionRouter,
+    },
 ];
 
 defaultRoutes.forEach((route) => {
-  router.use(route.path, route.route);
+    router.use(route.path, route.route);
 });
 
 module.exports = router;

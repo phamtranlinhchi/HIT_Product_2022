@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const bookSchema = mongoose.Schema({
+
     image: {
         type: [String], //
         trim: true,
@@ -74,6 +75,7 @@ bookSchema.methods.sortByView = function() {
         }
     }).sort({ view: -1 });
 };
+
 /**
  * @typedef bookModel
  */
