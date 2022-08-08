@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // process.env.MONGO_URI
 // mongodb+srv://Calendar:zxcvbnm1106@atlascluster.vifnygm.mongodb.net/?retryWrites=true&w=majority
 const connectDB = async() => {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    const conn = await mongoose.connect("mongodb+srv://Calendar:zxcvbnm1106@atlascluster.vifnygm.mongodb.net/?retryWrites=true&w=majority", {
         useNewUrlParser: true,
         retryWrites: false,
     });

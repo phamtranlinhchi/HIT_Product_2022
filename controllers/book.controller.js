@@ -81,6 +81,7 @@ module.exports = {
 
     getBook: asyncHandle(async(req, res, next) => {
         const book = await bookService.getBookById(req.params.bookId);
+
         if (!book) {
             return next(new ErrorResponse(httpStatus.NOT_FOUND, "Book not found"));
         }
@@ -92,6 +93,7 @@ module.exports = {
 
     updateBook: asyncHandle(async(req, res) => {
         const book = await bookService.updateBookById(req.params.bookId, req.body);
+        console.log(req.params.bookId)
         res.status(httpStatus.OK).json({
             status: "success",
             book,

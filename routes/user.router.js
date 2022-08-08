@@ -66,9 +66,7 @@ router
  */
 .post(userController.createUser);
 
-router
-    .route('/tokenUser')
-    .get(authController.getUserByToken)
+
 router
     .route('/tokenUser')
     .get(authController.getUserByToken)

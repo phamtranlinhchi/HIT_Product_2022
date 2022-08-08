@@ -3,7 +3,12 @@ const mongoose = require("mongoose");
 const bookSchema = mongoose.Schema({
 
     image: {
-        type: [String], //
+        type: String,
+        trim: true,
+        // required: [true, "Must contain image"],
+    },
+    namebook: {
+        type: String,
         trim: true,
         // required: [true, "Must contain image"],
     },
@@ -12,10 +17,11 @@ const bookSchema = mongoose.Schema({
         trim: true, //
         required: [true, "Must contain name book "],
     },
-    video: {
-        type: String, //
-        // required: [true, "Must contain video "],
-    },
+
+    video: [{
+        type: String,
+        required: [true, "Must contain video "],
+    }],
     description: {
         type: String, //
         minLength: [10, "Must be at least 0, got {VALUE}"],
@@ -25,7 +31,7 @@ const bookSchema = mongoose.Schema({
         type: Number, //
         validate: {
             validator: Number.isInteger,
-            // message: "{VALUE}  is not an integr value",
+            message: "{VALUE}  is not an integr value",
         },
     },
     contentBook: {
@@ -35,6 +41,11 @@ const bookSchema = mongoose.Schema({
     },
     numberPage: {
         type: Number, //
+        minLength: [10, "Must be at least 0, got {VALUE}"],
+        // required: true,
+    },
+    numberPage: {
+        type: Number,
         min: [0, "Must be at least 0, got {VALUE}"],
         validate: {
             validator: Number.isInteger,
@@ -52,6 +63,10 @@ const bookSchema = mongoose.Schema({
     },
     statusBook: {
         type: String, //
+        // required: true,
+    },
+    statusBook: {
+        type: String,
         enum: {
             values: ["vip", "common"],
             default: "common",
@@ -60,8 +75,8 @@ const bookSchema = mongoose.Schema({
         required: [true, "Must containt status book "],
     },
     typeBook: {
-        type: String, //
-        trim: true, //
+        type: String,
+        trim: true,
         minLength: 1,
         // required: [true, "Must contain type of book"],
     },
