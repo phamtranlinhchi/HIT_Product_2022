@@ -1,13 +1,7 @@
 const mongoose = require("mongoose");
 
 const bookSchema = mongoose.Schema({
-
     image: {
-        type: String,
-        trim: true,
-        // required: [true, "Must contain image"],
-    },
-    namebook: {
         type: String,
         trim: true,
         // required: [true, "Must contain image"],
@@ -21,7 +15,7 @@ const bookSchema = mongoose.Schema({
     video: [{
         type: String,
         required: [true, "Must contain video "],
-    }],
+    }, ],
     description: {
         type: String, //
         minLength: [10, "Must be at least 0, got {VALUE}"],
